@@ -193,6 +193,50 @@ Smoke-test a live deployment end to end:
 ./scripts/demo.sh testnet   # reads deployments/testnet.env
 ```
 
+## TypeScript clients
+
+Install the generated clients from npm:
+
+```bash
+npm install @mmm-pay/contracts @stellar/stellar-sdk
+```
+
+Use the generated client with the testnet RPC to read contract state:
+
+```ts
+import { Networks } from "@stellar/stellar-sdk";
+import { PlanRegistryClient } from "@mmm-pay/contracts";
+
+const registry = new PlanRegistryClient({
+  contractId: "YOUR_PLAN_REGISTRY_ID",
+  networkPassphrase: Networks.TESTNET,
+  rpcUrl: "https://soroban-testnet.stellar.org",
+});
+
+const transaction = await registry.next_plan_id();
+await transaction.simulate();
+const nextPlanId = transaction.result.unwrap();
+```
+
+The package also exports `VaultClient` and `SubscriptionClient`, with
+contract-specific types under `PlanRegistryTypes`, `VaultTypes` and
+`SubscriptionTypes`. Mutating methods return transactions that integrators
+must authorize and submit with the Stellar SDK.
+
+CI builds and verifies the bindings on contract changes. Publishing a GitHub
+release publishes the matching version to npm; the repository needs an
+`NPM_TOKEN` secret. The manual **TypeScript bindings testnet smoke** workflow
+checks the live registry's `next_plan_id` read without a signing key.
+
+To regenerate and check the package locally after changing a contract:
+
+```bash
+stellar contract build
+./scripts/generate-bindings.sh
+npm ci --prefix bindings
+npm test --prefix bindings
+```
+
 ## Repository layout
 
 ```

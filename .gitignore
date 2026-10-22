@@ -1,7 +1,7 @@
 target/
-.env
-.env.local
 *.wasm
 .DS_Store
 .stellar/
 test_snapshots/
+config.bat
+node_modules

@@ -123,6 +123,15 @@ Redeployed to testnet; the ids are in [`deployments/testnet.env`](deployments/te
 
 ## Unreleased
 
+### Added
+
+- Generated TypeScript clients for the plan registry, vault and subscription
+  contracts are published together as `@mmm-pay/contracts` on tagged releases.
+  CI verifies the generated package, and a manual testnet smoke workflow calls
+  the registry's read-only `next_plan_id` method. Follow-up adoption issues in
+  `payflow-frontend`, `payflow-backend` and `payflow-docs` should replace
+  handwritten wrappers and document the package as appropriate.
+
 ### Security
 
 - **Settlement no longer depends on one operator.** A plan may set
